@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motor Halus 2.2.3 – Menconteng dan Mengecat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>Conteng &amp; Cat</h1>
+    <p class="sub">Pengurusan Kehidupan · Kemahiran Manipulatif Tahun 2 · 2.2.3</p>
+  </div>
+  <button class="btn ghost" id="btnInfo" type="button">Maklumat guru</button>
+</header>
+
+<main>
+  <!-- MENU AKTIVITI -->
+  <section id="menu" aria-label="Pilih aktiviti">
+    <h2>Pilih aktiviti</h2>
+    <div id="cards" class="cards"></div>
+  </section>
+
+  <!-- RUANG BERMAIN -->
+  <section id="play" hidden aria-label="Aktiviti">
+    <div class="bar">
+      <button class="btn ghost" id="btnBack" type="button">Kembali</button>
+      <div class="heading">
+        <strong id="actTitle"></strong>
+        <span id="lvlTag" class="tag"></span>
+      </div>
+    </div>
+
+    <div class="instruction">
+      <p id="instr"></p>
+      <button class="btn round" id="btnSpeak" type="button" aria-label="Dengar arahan">🔊</button>
+    </div>
+
+    <ul id="chips" class="chips"></ul>
+
+    <div class="stage">
+      <canvas id="board" width="800" height="500" aria-label="Kertas lukisan"></canvas>
+    </div>
+
+    <div class="tools">
+      <div id="palette" class="palette" role="radiogroup" aria-label="Warna"></div>
+      <div id="sizes" class="sizes" role="radiogroup" aria-label="Saiz berus"></div>
+      <button class="btn ghost" id="btnClear" type="button">Padam semua</button>
+    </div>
+
+    <div class="progress" aria-live="polite">
+      <div class="meter"><div id="meterFill"></div></div>
+      <span id="meterTxt">0%</span>
+    </div>
+    <p id="hint" class="hint" role="status"></p>
+  </section>
+</main>
+
+<!-- KEJAYAAN -->
+<dialog id="win">
+  <h2>Hebat! 🎉</h2>
+  <p id="winTxt"></p>
+  <div class="row">
+    <button class="btn ghost" id="winAgain" type="button">Main lagi</button>
+    <button class="btn" id="winNext" type="button">Seterusnya</button>
+  </div>
+</dialog>
+
+<!-- MAKLUMAT DSKP -->
+<dialog id="info" class="wide">
+  <h2>Maklumat DSKP</h2>
+
+  <h3>1. Maklumat umum hasil pembelajaran</h3>
+  <dl>
+    <dt>Kurikulum</dt><dd>KSSRPK Pendidikan Khas (Kurikulum Semakan) – Masalah Pembelajaran</dd>
+    <dt>Mata pelajaran</dt><dd>Pengurusan Kehidupan</dd>
+    <dt>Komponen</dt><dd>Kemahiran Manipulatif, Tahun 2</dd>
+    <dt>Tempoh</dt><dd>Minggu 26 – Minggu 30</dd>
+  </dl>
+  <p><strong>Objektif (murid boleh…):</strong></p>
+  <ol>
+    <li>Boleh melakukan pergerakan motor halus dengan alatan secara berpandu.</li>
+    <li>Menunjukkan cara melakukan pergerakan motor halus dengan alatan.</li>
+    <li>Menunjukkan cara melakukan pergerakan motor halus dengan alatan dalam aktiviti nyanyian, simulasi atau pelbagai kaedah terapi.</li>
+    <li>Menunjukkan cara melakukan pergerakan motor halus menggunakan alatan dengan betul.</li>
+    <li>Menunjukkan cara melakukan pergerakan motor halus menggunakan alatan dengan betul dan selamat.</li>
+    <li>Menunjukkan cara melakukan pergerakan motor halus menggunakan alatan dengan betul, selamat dan boleh dicontohi.</li>
+  </ol>
+
+  <h3>2. Tajuk</h3>
+  <p>2.0 Motor Halus – 2.2 Pergerakan motor halus dengan alatan</p>
+
+  <h3>3. Standard kandungan</h3>
+  <p><strong>2.2.3</strong> Murid dibimbing untuk melakukan pergerakan:</p>
+  <ul>
+    <li>(i) menconteng menggunakan pensel, pensel warna atau pen marker</li>
+    <li>(ii) mengecat menggunakan berus pelbagai saiz</li>
+    <li>(iii) memutar penutup botol, skru atau tombol pintu <em>(tidak termasuk dalam aplikasi ini)</em></li>
+  </ul>
+  <p><strong>Standard pembelajaran 2.2.4</strong> Murid berupaya menunjukkan cara pergerakan motor halus dengan alatan dalam pelbagai kaedah terapi atau simulasi.</p>
+
+  <h3>Pemetaan level</h3>
+  <ul>
+    <li><strong>Level 1</strong> – Objektif 1 hingga 3: melakukan secara berpandu dan menunjukkan cara dalam aktiviti.</li>
+    <li><strong>Level 2</strong> – Objektif 4 hingga 6: melakukan dengan betul, tepat dan terkawal.</li>
+  </ul>
+
+  <div class="row"><button class="btn" id="infoClose" type="button">Tutup</button></div>
+</dialog>
+
+<script src="script.js"></script>
+</body>
+</html>
