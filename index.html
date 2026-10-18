@@ -2,115 +2,64 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Motor Halus 2.2.3 – Menconteng dan Mengecat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pahlawan Titik – Koordinasi Mata-Tangan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="clouds" aria-hidden="true"><i></i><i></i><i></i></div>
 
-<header class="top">
-  <div>
-    <h1>Conteng &amp; Cat</h1>
-    <p class="sub">Pengurusan Kehidupan · Kemahiran Manipulatif Tahun 2 · 2.2.3</p>
-  </div>
-  <button class="btn ghost" id="btnInfo" type="button">Maklumat guru</button>
-</header>
-
-<main>
-  <!-- MENU AKTIVITI -->
-  <section id="menu" aria-label="Pilih aktiviti">
-    <h2>Pilih aktiviti</h2>
-    <div id="cards" class="cards"></div>
+<main class="app">
+  <!-- MENU -->
+  <section id="menu" class="screen active">
+    <h1 class="logo">Pahlawan <span>Titik</span></h1>
+    <p class="sub">Kutip titik mengikut nombor dan bina corak garisan!</p>
+    <div class="cards">
+      <button class="card c1" data-level="1">
+        <b class="emoji">🌱</b><h2>Mudah</h2>
+        <p>Meniru corak garisan tangga</p><em id="st1">☆☆☆</em>
+      </button>
+      <button class="card c2" data-level="2">
+        <b class="emoji">🔥</b><h2>Sederhana</h2>
+        <p>Menyambung titik-titik bernombor</p><em id="st2">☆☆☆</em>
+      </button>
+      <button class="card c3" data-level="3">
+        <b class="emoji">🚀</b><h2>Mencabar</h2>
+        <p>Menulis semula corak dari ingatan</p><em id="st3">☆☆☆</em>
+      </button>
+    </div>
+    <button id="btnInfo" class="btn ghost">📘 Maklumat DSKP (Guru)</button>
   </section>
 
-  <!-- RUANG BERMAIN -->
-  <section id="play" hidden aria-label="Aktiviti">
-    <div class="bar">
-      <button class="btn ghost" id="btnBack" type="button">Kembali</button>
-      <div class="heading">
-        <strong id="actTitle"></strong>
-        <span id="lvlTag" class="tag"></span>
-      </div>
+  <!-- GAME -->
+  <section id="play" class="screen">
+    <div class="hud">
+      <button id="btnMenu" class="btn small" aria-label="Menu">🏠</button>
+      <span id="hLevel" class="pill">Mudah</span>
+      <span id="hLives" class="pill">❤️❤️❤️</span>
+      <span id="hDots" class="pill">🔵 0/0</span>
+      <span id="hScore" class="pill">⭐ 0</span>
+      <button id="btnHint" class="btn small hide" aria-label="Petunjuk">💡</button>
+      <button id="btnSound" class="btn small" aria-label="Bunyi">🔊</button>
     </div>
-
-    <div class="instruction">
-      <p id="instr"></p>
-      <button class="btn round" id="btnSpeak" type="button" aria-label="Dengar arahan">🔊</button>
-    </div>
-
-    <ul id="chips" class="chips"></ul>
-
     <div class="stage">
-      <canvas id="board" width="800" height="500" aria-label="Kertas lukisan"></canvas>
+      <canvas id="game"></canvas>
+      <div id="msg" class="toast"></div>
     </div>
-
-    <div class="tools">
-      <div id="palette" class="palette" role="radiogroup" aria-label="Warna"></div>
-      <div id="sizes" class="sizes" role="radiogroup" aria-label="Saiz berus"></div>
-      <button class="btn ghost" id="btnClear" type="button">Padam semua</button>
+    <div class="pad" aria-label="Kawalan">
+      <div>
+        <button class="pb" data-k="left" aria-label="Kiri">◀</button>
+        <button class="pb" data-k="right" aria-label="Kanan">▶</button>
+      </div>
+      <button class="pb jump" data-k="jump" aria-label="Lompat">⬆ Lompat</button>
     </div>
-
-    <div class="progress" aria-live="polite">
-      <div class="meter"><div id="meterFill"></div></div>
-      <span id="meterTxt">0%</span>
-    </div>
-    <p id="hint" class="hint" role="status"></p>
+    <p class="keys">Papan kekunci: ← → atau A D untuk bergerak, Ruang / ↑ untuk lompat</p>
   </section>
 </main>
 
-<!-- KEJAYAAN -->
-<dialog id="win">
-  <h2>Hebat! 🎉</h2>
-  <p id="winTxt"></p>
-  <div class="row">
-    <button class="btn ghost" id="winAgain" type="button">Main lagi</button>
-    <button class="btn" id="winNext" type="button">Seterusnya</button>
-  </div>
-</dialog>
-
-<!-- MAKLUMAT DSKP -->
-<dialog id="info" class="wide">
-  <h2>Maklumat DSKP</h2>
-
-  <h3>1. Maklumat umum hasil pembelajaran</h3>
-  <dl>
-    <dt>Kurikulum</dt><dd>KSSRPK Pendidikan Khas (Kurikulum Semakan) – Masalah Pembelajaran</dd>
-    <dt>Mata pelajaran</dt><dd>Pengurusan Kehidupan</dd>
-    <dt>Komponen</dt><dd>Kemahiran Manipulatif, Tahun 2</dd>
-    <dt>Tempoh</dt><dd>Minggu 26 – Minggu 30</dd>
-  </dl>
-  <p><strong>Objektif (murid boleh…):</strong></p>
-  <ol>
-    <li>Boleh melakukan pergerakan motor halus dengan alatan secara berpandu.</li>
-    <li>Menunjukkan cara melakukan pergerakan motor halus dengan alatan.</li>
-    <li>Menunjukkan cara melakukan pergerakan motor halus dengan alatan dalam aktiviti nyanyian, simulasi atau pelbagai kaedah terapi.</li>
-    <li>Menunjukkan cara melakukan pergerakan motor halus menggunakan alatan dengan betul.</li>
-    <li>Menunjukkan cara melakukan pergerakan motor halus menggunakan alatan dengan betul dan selamat.</li>
-    <li>Menunjukkan cara melakukan pergerakan motor halus menggunakan alatan dengan betul, selamat dan boleh dicontohi.</li>
-  </ol>
-
-  <h3>2. Tajuk</h3>
-  <p>2.0 Motor Halus – 2.2 Pergerakan motor halus dengan alatan</p>
-
-  <h3>3. Standard kandungan</h3>
-  <p><strong>2.2.3</strong> Murid dibimbing untuk melakukan pergerakan:</p>
-  <ul>
-    <li>(i) menconteng menggunakan pensel, pensel warna atau pen marker</li>
-    <li>(ii) mengecat menggunakan berus pelbagai saiz</li>
-    <li>(iii) memutar penutup botol, skru atau tombol pintu <em>(tidak termasuk dalam aplikasi ini)</em></li>
-  </ul>
-  <p><strong>Standard pembelajaran 2.2.4</strong> Murid berupaya menunjukkan cara pergerakan motor halus dengan alatan dalam pelbagai kaedah terapi atau simulasi.</p>
-
-  <h3>Pemetaan level</h3>
-  <ul>
-    <li><strong>Level 1</strong> – Objektif 1 hingga 3: melakukan secara berpandu dan menunjukkan cara dalam aktiviti.</li>
-    <li><strong>Level 2</strong> – Objektif 4 hingga 6: melakukan dengan betul, tepat dan terkawal.</li>
-  </ul>
-
-  <div class="row"><button class="btn" id="infoClose" type="button">Tutup</button></div>
-</dialog>
+<div id="modal" class="modal"><div class="box" id="modalBox"></div></div>
 
 <script src="script.js"></script>
 </body>
