@@ -6,19 +6,26 @@ C.width = W; C.height = H;
 
 /* ---------- Data tahap (DSKP 2.3.1 i, ii, iii) ---------- */
 const LV = {
-  1: { name: 'Mudah', tp: 'TP1–TP2', guide: true, nums: true, hide: false, glow: true, flag: 772,
-       plat: [[380,330,110],[540,270,110],[680,210,110]],
-       coins: [[120,360],[220,360],[320,360],[430,300],[590,240],[730,180]],
-       foes: [] },
-  2: { name: 'Sederhana', tp: 'TP3–TP4', guide: false, nums: true, hide: false, glow: true, flag: 775,
-       plat: [[100,330,110],[260,260,110],[420,330,110],[580,260,110],[700,330,90]],
-       coins: [[155,300],[315,230],[475,300],[635,230],[745,300]],
-       foes: [{ x: 300, min: 230, max: 640, sp: 1.2 }] },
-  3: { name: 'Mencabar', tp: 'TP5–TP6', guide: false, nums: true, hide: true, glow: false, flag: 775,
-       plat: [[60,340,90],[200,280,90],[340,220,90],[480,280,90],[620,340,90],[720,260,80]],
-       coins: [[105,310],[245,250],[385,190],[525,250],[665,310],[760,230]],
-       foes: [{ x: 400, min: 150, max: 700, sp: 1.8 }, { x: 600, min: 300, max: 750, sp: 1.4 }] }
+  1: { name: 'Mudah', guide: true, nums: true, hide: false, glow: true, foes: [] },
+  2: { name: 'Sederhana', guide: false, nums: true, hide: false, glow: true, foes: [{ x: 300, min: 230, max: 640, sp: 1.2 }] },
+  3: { name: 'Mencabar', guide: false, nums: true, hide: true, glow: false, foes: [{ x: 400, min: 150, max: 700, sp: 1.8 }, { x: 600, min: 300, max: 750, sp: 1.4 }] }
 };
+/* 6 corak garisan berbeza (dipilih secara rawak setiap kali main) */
+const PAT = [
+  { name: 'Tangga', plat: [[380,330,110],[540,270,110],[680,210,110]],
+    coins: [[120,360],[220,360],[320,360],[430,300],[590,240],[730,180]] },
+  { name: 'Zigzag', plat: [[100,330,110],[260,260,110],[420,330,110],[580,260,110],[700,330,90]],
+    coins: [[155,300],[315,230],[475,300],[635,230],[745,300]] },
+  { name: 'Gunung', plat: [[60,340,90],[200,280,90],[340,220,90],[480,280,90],[620,340,90],[720,260,80]],
+    coins: [[105,310],[245,250],[385,190],[525,250],[665,310],[760,230]] },
+  { name: 'Gelombang', plat: [[60,330,100],[220,290,100],[380,340,100],[540,290,100],[690,340,100]],
+    coins: [[110,300],[270,260],[430,310],[590,260],[740,310]] },
+  { name: 'Jambatan', plat: [[200,320,120],[380,320,120],[560,320,120]],
+    coins: [[150,360],[260,290],[440,290],[620,290],[740,360]] },
+  { name: 'Lembah', plat: [[20,330,80],[400,330,90],[540,260,90],[670,190,100]],
+    coins: [[60,300],[170,360],[290,360],[445,300],[585,230],[720,160]] }
+];
+let lastPat = -1;
 const best = { 1: 0, 2: 0, 3: 0 };
 
 /* ---------- Keadaan ---------- */
@@ -56,17 +63,19 @@ function starsTxt(n) { return '★'.repeat(n) + '☆'.repeat(3 - n); }
 function refreshMenu() { for (let i = 1; i <= 3; i++) $('st' + i).textContent = starsTxt(best[i]); }
 
 /* ---------- Mula / tamat ---------- */
-function start(n) {
-  lvl = n; L = LV[n]; closeModal(); show('play');
+function start(n, keep) {
+  lvl = n; closeModal();
+  if (!keep || lastPat < 0) { let i; do { i = Math.floor(Math.random() * PAT.length); } while (i === lastPat); lastPat = i; }
+  L = { ...LV[n], ...PAT[lastPat], flag: 772 }; show('play');
   p = { x: 30, y: G - 38, w: 28, h: 38, vx: 0, vy: 0, ground: true, face: 1, anim: 0, inv: 0, lives: 3, moving: false };
   coins = L.coins.map((c, i) => ({ x: c[0], y: c[1], n: i + 1, got: false }));
   foes = L.foes.map(f => ({ ...f, y: G, w: 34, h: 26, dir: 1, dead: 0 }));
   trail = []; next = 1; score = 0; hints = 0; parts = [];
   prev = L.hide ? 300 : 0;
-  $('hLevel').textContent = L.name;
+  $('hLevel').textContent = LV[n].name + ': ' + PAT[lastPat].name;
   $('btnHint').classList.toggle('hide', !L.hide);
   S = 'play';
-  toast(L.hide ? 'Hafal corak dahulu!' : n === 1 ? 'Kutip titik 1, 2, 3 ikut garisan!' : 'Kutip titik ikut nombor!', 2400);
+  toast(L.hide ? `Corak ${L.name}: hafal dahulu!` : `Corak ${PAT[lastPat].name}: kutip titik ikut nombor!`, 2600);
   last = performance.now();
 }
 function finish(win) {
@@ -75,7 +84,7 @@ function finish(win) {
     const st = p.lives === 3 && hints === 0 ? 3 : p.lives >= 2 ? 2 : 1;
     best[lvl] = Math.max(best[lvl], st); sfx.win(); confetti();
     modal(`<h2>🎉 Hebat sekali!</h2><div class="stars">${starsTxt(st)}</div>
-      <p>Anda berjaya menyiapkan corak <b>${L.name}</b>!<br>Skor: ⭐ ${score}</p>
+      <p>Anda berjaya menyiapkan corak <b>${PAT[lastPat].name}</b>!<br>Skor: ⭐ ${score}</p>
       <div class="row"><button class="btn" id="mRetry">🔁 Main Semula</button>
       ${lvl < 3 ? '<button class="btn go" id="mNext">➡ Tahap Seterusnya</button>' : ''}
       <button class="btn red" id="mMenu">🏠 Menu</button></div>`);
@@ -85,7 +94,7 @@ function finish(win) {
     modal(`<h2>😢 Cuba lagi!</h2><p>Jangan risau, anda pasti boleh!<br>Lompat atas musuh atau elak mereka.</p>
       <div class="row"><button class="btn go" id="mRetry">🔁 Cuba Lagi</button><button class="btn red" id="mMenu">🏠 Menu</button></div>`);
   }
-  $('mRetry').onclick = () => start(lvl);
+  $('mRetry').onclick = () => start(lvl, !win);
   $('mMenu').onclick = toMenu;
 }
 function toMenu() { S = 'menu'; closeModal(); refreshMenu(); show('menu'); }
@@ -283,6 +292,7 @@ $('btnInfo').onclick = () => {
   <tr><td>Mudah</td><td>(i) Meniru garisan panduan bertitik</td><td>1–2</td></tr>
   <tr><td>Sederhana</td><td>(ii) Menyambung titik bernombor</td><td>3–4</td></tr>
   <tr><td>Mencabar</td><td>(iii) Menulis semula corak dari ingatan</td><td>5–6</td></tr></table>
+  <h3>6 corak garisan rawak</h3><p>Tangga, Zigzag, Gunung, Gelombang, Jambatan dan Lembah. Satu corak dipilih secara rawak setiap kali bermain.</p>
   <div class="row"><button class="btn go" id="mClose">Tutup</button></div>`, 'info');
   $('mClose').onclick = closeModal;
 };
